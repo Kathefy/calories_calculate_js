@@ -25,6 +25,23 @@ const ItemCtrl = (function() {
     getItems: function() {
       return data.items;
     },
+    addItem: function(name, calories) {
+      let ID;
+      // Create ID
+      if(data.items.length > 0) {
+        ID = data.items[data.items.length - 1].id + 1
+      } else {
+        ID = 0;
+      }
+
+      // Calories to number
+      calories = parseInt(calories);
+      // new Item
+      newItem = new Item(ID, name, calories);
+      data.items.push(newItem);
+
+      return newItem;
+    },
     logData: function(){
       return data;
     }
@@ -34,7 +51,10 @@ const ItemCtrl = (function() {
 // UI Controller
 const UICtrl = (function() {
   const UISelectors = {
-    itemList: '#item-list'
+    itemList: '#item-list',
+    addBtn: '.add-btn',
+    itemNameInput: '#item-name',
+    itemCaloriesInput: '#item-calories'
   }
 
   // Public method
@@ -53,6 +73,17 @@ const UICtrl = (function() {
 
       // Insert list items
       document.querySelector(UISelectors.itemList).innerHTML = html;
+    },
+
+    getItemInput: function() {
+      return {
+        name: document.querySelector(UISelectors.itemNameInput).value,
+        calories: document.querySelector(UISelectors.itemCaloriesInput).value
+      }
+    },
+
+    getSelectors: function() {
+      return UISelectors;
     }
   }
 })();
@@ -60,6 +91,27 @@ const UICtrl = (function() {
 // App Controller
 const App = (function(ItemCtrl, UICtrl) {
   // console.log(ItemCtrl.logData());
+
+  // Load event listeners
+  const loadEventListeners = function() {
+    // Get UI Selectors
+    const UISelectors = UICtrl.getSelectors();
+
+    // Add item event
+    document.querySelector(UISelectors.addBtn).addEventListener('click', itemAddSubmit);
+
+  }
+
+  // Add item submit
+  const itemAddSubmit = function(e) {
+    e.preventDefault();
+    // Get form input
+    const input = UICtrl.getItemInput();
+    // Check for data
+    if(input.name && input.calories) {
+      const newItem = ItemCtrl.addItem(input.name, input.calories)
+    }
+  }
 
   // Public method
   return {
@@ -70,9 +122,12 @@ const App = (function(ItemCtrl, UICtrl) {
       const items = ItemCtrl.getItems();
       // Create list items
       UICtrl.createItemList(items);
+
+      //Load event listeners
+      loadEventListeners();
     }
   }
 })(ItemCtrl, UICtrl);
 
 // Initialize App
-App.init()
+App.init();
