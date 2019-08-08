@@ -25,6 +25,7 @@ const ItemCtrl = (function() {
     getItems: function() {
       return data.items;
     },
+
     addItem: function(name, calories) {
       let ID;
       // Create ID
@@ -41,6 +42,17 @@ const ItemCtrl = (function() {
 
       return newItem;
     },
+
+    getTotalCalories: function(){
+      let total;
+      data.items.forEach(function(item){
+        total += item.calories;
+      });
+      data.totalCalories = total;
+
+      return data.totalCalories;
+    },
+
     logData: function(){
       return data;
     }
@@ -53,7 +65,8 @@ const UICtrl = (function() {
     itemList: '#item-list',
     addBtn: '.add-btn',
     itemNameInput: '#item-name',
-    itemCaloriesInput: '#item-calories'
+    itemCaloriesInput: '#item-calories',
+    totalCalories: '.total-calories'
   }
 
   // Public method
@@ -102,6 +115,10 @@ const UICtrl = (function() {
       document.querySelector(UISelectors.itemList).getElementsByClassName.display = 'none';
     },
 
+    showTotalCalories(totalCalories) {
+      document.querySelector(UISelectors.totalCalories).textContent = totalCalories;
+    },
+
     getSelectors: function() {
       return UISelectors;
     }
@@ -128,6 +145,11 @@ const App = (function(ItemCtrl, UICtrl) {
       const newItem = ItemCtrl.addItem(input.name, input.calories);
       // Add item
       UICtrl.addListItem(newItem);
+      // Get total calories
+      const totalCalories = ItemCtrl.getTotalCalories();
+      // Show calories
+      UICtrl.showTotalCalories(totalCalories);
+
       // Clear fields
       UICtrl.clearInput();
     }
@@ -145,6 +167,11 @@ const App = (function(ItemCtrl, UICtrl) {
         // Create list items
         UICtrl.createItemList(items);
       }
+      
+      // Get total calories
+      const totalCalories = ItemCtrl.getTotalCalories();
+      // Show calories
+      UICtrl.showTotalCalories(totalCalories);
 
       //Load event listeners
       loadEventListeners();
