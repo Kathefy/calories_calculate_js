@@ -11,11 +11,7 @@ const ItemCtrl = (function() {
 
   // Data Structure / State
   const data = {
-    items: [
-      // {id: 0, name: 'Steak Dinner', calories: 1200},
-      // {id: 0, name: 'Fish', calories: 500},
-      // {id: 0, name: 'Omlet', calories: 600}
-    ],
+    items: [],
     currentItem: null,
     totalCalories: 0
   }
@@ -44,7 +40,7 @@ const ItemCtrl = (function() {
     },
 
     getTotalCalories: function(){
-      let total;
+      let total = 0;
       data.items.forEach(function(item){
         total += item.calories;
       });
@@ -95,7 +91,7 @@ const UICtrl = (function() {
     },
 
     addListItem: function(item) {
-      document.querySelector(UISelectors.itemList).getElementsByClassName.display = 'block';
+      document.querySelector(UISelectors.itemList).style.display = 'block';
       const li = document.createElement('li');
       li.className = 'collection-item';
       li.id = `item-${item.id}`;
@@ -112,7 +108,7 @@ const UICtrl = (function() {
     },
 
     hideList: function() {
-      document.querySelector(UISelectors.itemList).getElementsByClassName.display = 'none';
+      document.querySelector(UISelectors.itemList).style.display = 'none';
     },
 
     showTotalCalories(totalCalories) {
@@ -160,7 +156,7 @@ const App = (function(ItemCtrl, UICtrl) {
     init: function(){
       // Fetch items from data
       const items = ItemCtrl.getItems();
-
+      
       if(items.length === 0) {
         UICtrl.hideList();
       } else {
